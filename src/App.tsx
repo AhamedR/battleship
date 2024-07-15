@@ -1,8 +1,10 @@
+import GameTemplate from "./components/template/GameTemplate"
+
 function App() {
+
+  // Add provider here
   return (
-    <div>
-      Battleship
-    </div>
+    <GameTemplate/>
   )
 }
 
