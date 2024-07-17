@@ -1,5 +1,4 @@
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 interface ScoreBoardProps {
@@ -17,15 +16,27 @@ const ScoreBoard: React.FC<ScoreBoardProps> = ({
   const formattedScore = String(score).padStart(2, "0");
 
   return (
-    <Grid xs={6}>
-      <Box style={{ padding: "16px", backgroundColor: color }}>
-        <Typography variant="h4" align="center" borderBottom={"solid 1px "}>
+    <Grid item xs={6}>
+      <Grid item width={"100%"} p={1} sx={{ backgroundColor: color }}>
+        <Typography
+          variant="h4"
+          align="center"
+          m={"8px"}
+          pb={"8px"}
+          borderBottom={"solid 1px"}
+          sx={{ fontWeight: "bold" }}
+        >
           {formattedScore}
         </Typography>
-        <Typography variant="subtitle1" align="center">
+        <Typography
+          variant="subtitle1"
+          align="center"
+          p={"8px"}
+          sx={{ fontWeight: "bold" }}
+        >
           {name}
         </Typography>
-      </Box>
+      </Grid>
     </Grid>
   );
 };

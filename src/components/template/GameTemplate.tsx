@@ -1,20 +1,22 @@
-import React from "react";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+
 import GameInfo from "../organisms/GameInfo";
-import { Container, Grid } from "@mui/material";
+import Board from "../organisms/Board";
 
 const GameTemplate: React.FC = () => {
   return (
     <Container maxWidth="md">
       <Grid
         container
-        spacing={2}
-        sx={{flexDirection: { md: 'row', xs: 'column-reverse' }}}
+        sx={{ flexDirection: { md: "row", xs: "column-reverse" } }}
+        mt={4}
       >
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={5}>
           <GameInfo />
         </Grid>
-        <Grid item xs={12} md={6}>
-          Game board
+        <Grid item xs={12} md={7}>
+          <Board />
         </Grid>
       </Grid>
     </Container>

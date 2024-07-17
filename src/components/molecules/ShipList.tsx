@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import Grid from '@mui/material/Grid';
+
 import Ship from '../atoms/Ship';
 
 // Assets
@@ -46,13 +47,13 @@ const ShipList: React.FC = () => {
   const ships = useMemo(() => shipsData, []);
 
   return (
-    <Grid container spacing={2} mt={2}>
+    <>
       {ships.map((ship, index) => (
         <Grid key={index} item xs={12} sm={6} md={12} maxWidth="50%">
           <Ship name={ship.name} img={ship.img} hits={ship.hits} />
         </Grid>
       ))}
-    </Grid>
+    </>
   );
 };
 
