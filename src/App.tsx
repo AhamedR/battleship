@@ -1,10 +1,12 @@
 import GameTemplate from "./components/template/GameTemplate"
+import { GameProvider } from "./contexts/GameContext"
 
 function App() {
 
-  // Add provider here
   return (
-    <GameTemplate/>
+    <GameProvider>
+      <GameTemplate/>
+    </GameProvider>
   )
 }
 
