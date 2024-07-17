@@ -1,36 +1,16 @@
 import Grid from "@mui/material/Grid";
-import { Typography } from "@mui/material";
+import ScoreBoard from "../molecules/ScoreBoard";
+import ShipList from "../molecules/ShipList";
 
 const GameInfo: React.FC = () => {
   return (
-    <Grid container>
-      <Grid container justifyContent={"space-between"}>
-        <Grid
-          container
-          md={6}
-          direction={"column"}
-          textAlign={"center"}
-          width={"50%"}
-          sx={{ background: "red" }}
-          p={1}
-        >
-          <Typography>Player 1</Typography>
-          <Typography>00</Typography>
-        </Grid>
-        <Grid
-          container
-          md={6}
-          direction={"column"}
-          textAlign={"center"}
-          width={"50%"}
-          sx={{ background: "green" }}
-          p={1}
-        >
-          <Typography>Player 1</Typography>
-          <Typography>00</Typography>
-        </Grid>
+    <>
+      <Grid container spacing={2}>
+        <ScoreBoard name="Player 1" score={1} />
+        <ScoreBoard name="Player 2" score={0} color="#00ACC1" />
       </Grid>
-    </Grid>
+      <ShipList />
+    </>
   );
 };
 
