@@ -69,7 +69,9 @@ const DUMMY = {
 
 const useGameLogic = () => {
   const context = DUMMY
-  return context;
+  const handelClick = (rowIndex: number, colIndex: number) => {}
+
+  return {...context, handelClick};
 };
 
 export default useGameLogic;
