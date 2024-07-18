@@ -1,20 +1,19 @@
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 
 import ScoreBoard from "../molecules/ScoreBoard";
 import ShipList from "../molecules/ShipList";
 
 const GameInfo: React.FC = () => {
   return (
-    <Box>
-      <Grid container>
+    <Grid container sx={{ flexDirection: { md: "row", sm: "row" } }}>
+      <Grid container item md={12} xs={12} sm={4} mb={2}>
         <ScoreBoard name="Player 1" score={1} />
         <ScoreBoard name="Player 2" score={0} color="#00ACC1" />
       </Grid>
-      <Grid container spacing={1} mt={2}>
+      <Grid container item md={12} xs={12} sm={8} pl={{ sm: 2 }}>
         <ShipList />
       </Grid>
-    </Box>
+    </Grid>
   );
 };
 
