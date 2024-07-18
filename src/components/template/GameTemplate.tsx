@@ -10,9 +10,10 @@ const GameTemplate: React.FC = () => {
       <Grid
         container
         sx={{ flexDirection: { md: "row", xs: "column-reverse" } }}
-        mt={4}
+        spacing={{ xs: 0, md: 1 }}
+        pt={4}
       >
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={5} pt={{ xs: 0, sm: 2 }}>
           <GameInfo />
         </Grid>
         <Grid item xs={12} md={7}>

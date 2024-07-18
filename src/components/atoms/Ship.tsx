@@ -11,7 +11,7 @@ interface ShipProps {
 
 const Ship: React.FC<ShipProps> = ({ name, img, hits }) => {
   return (
-    <Grid container item spacing={2} wrap="nowrap">
+    <Grid container item wrap="nowrap">
       <Grid item sm={6} xs={3} minWidth={"50%"} pr={2}>
         <img src={img} alt={name} style={{ width: "100%", height: "auto" }} />
       </Grid>
