@@ -34,6 +34,9 @@ export interface GameContextType {
   user: PlayerDetail;
   opponent: PlayerDetail;
   isWon: boolean;
+  showHitLocations: boolean;
+  toggleHitLocations: () => void;
+  restartGame: () => void;
 }
 
 // Initial Values
@@ -106,14 +109,22 @@ const initialOpponent: PlayerDetail = {
   score: 0,
 };
 
+const calculateTotalShipCells = (ships: Ships): number =>
+  Object.values(ships).reduce((acc, ship) => acc + ship.size, 0);
+
 export const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [board, setBoard] = useState<string[][]>(initialBoard);
-  const [ships, setShips] = useState<Ships>(initialShips);
-  const [user, setUser] = useState<PlayerDetail>(initialUser);
+  const [board, setBoard] = useState<string[][]>([
+    ...initialBoard.map((row) => [...row]),
+  ]);
+  const [ships, setShips] = useState<Ships>(
+    JSON.parse(JSON.stringify(initialShips))
+  );
+  const [user, setUser] = useState<PlayerDetail>({ ...initialUser });
+  const [showHitLocations, setShowHitLocations] = useState(false);
   const [totalShipCells, setTotalShipCells] = useState(() =>
-    Object.values(initialShips).reduce((acc, ship) => acc + ship.size, 0)
+    calculateTotalShipCells(initialShips)
   );
 
   const handleBoardClick = useCallback(
@@ -157,10 +168,31 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     [board, totalShipCells]
   );
 
+  const toggleHitLocations = () => setShowHitLocations((prev) => !prev);
+
+  const restartGame = () => {
+    setBoard([...initialBoard.map((row) => [...row])]);
+    setShips(JSON.parse(JSON.stringify(initialShips)));
+    setUser({ ...initialUser });
+    setTotalShipCells(calculateTotalShipCells(initialShips));
+  };
+
   const isWon = totalShipCells === 0;
 
   return (
-    <GameContext.Provider value={{ board, handleBoardClick, ships, user, opponent: initialOpponent, isWon }}>
+    <GameContext.Provider
+      value={{
+        board,
+        handleBoardClick,
+        ships,
+        user,
+        opponent: initialOpponent,
+        isWon,
+        showHitLocations,
+        toggleHitLocations,
+        restartGame,
+      }}
+    >
       {children}
     </GameContext.Provider>
   );
