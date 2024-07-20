@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from "react";
+import React, { createContext, useState, ReactNode, useCallback } from "react";
 
 // Assets
 import CarrierImg from "../assets/carrier.png";
@@ -7,26 +7,40 @@ import CruiserImg from "../assets/cruiser.png";
 import SubmarineImg from "../assets/submarine.png";
 import DestroyerImg from "../assets/destroyer.png";
 
+// Types
 interface ShipLayout {
   positions: [number, number][];
   size: number;
-  img: string;
+}
+
+interface ShipDetail extends ShipLayout {
   hits: boolean[];
+  img: string;
 }
 
 interface Ships {
-  [key: string]: ShipLayout;
+  [key: string]: ShipDetail;
+}
+
+interface PlayerDetail {
+  name: string;
+  score: number;
 }
 
 export interface GameContextType {
   board: string[][];
   handleClick: (row: number, col: number) => void;
   ships: Ships;
+  user: PlayerDetail;
+  opponent: PlayerDetail;
+  isWon: boolean;
 }
 
+// Initial Values
 const initialBoard: string[][] = Array(10)
   .fill(null)
   .map(() => Array(10).fill(""));
+
 const shipLayout: Ships = {
   carrier: {
     positions: [
@@ -37,10 +51,8 @@ const shipLayout: Ships = {
       [6, 9],
     ],
     img: CarrierImg,
-    get size(): number {
-      return this.positions.length;
-    },
-    hits: [false, false, false, false, false],
+    size: 5,
+    hits: Array(5).fill(false),
   },
   battleship: {
     positions: [
@@ -50,10 +62,8 @@ const shipLayout: Ships = {
       [5, 5],
     ],
     img: BattleshipImg,
-    get size(): number {
-      return this.positions.length;
-    },
-    hits: [false, false, false, false],
+    size: 4,
+    hits: Array(4).fill(false),
   },
   cruiser: {
     positions: [
@@ -62,10 +72,8 @@ const shipLayout: Ships = {
       [8, 3],
     ],
     img: CruiserImg,
-    get size(): number {
-      return this.positions.length;
-    },
-    hits: [false, false, false],
+    size: 3,
+    hits: Array(3).fill(false),
   },
   submarine: {
     positions: [
@@ -74,10 +82,8 @@ const shipLayout: Ships = {
       [3, 2],
     ],
     img: SubmarineImg,
-    get size(): number {
-      return this.positions.length;
-    },
-    hits: [false, false, false],
+    size: 3,
+    hits: Array(3).fill(false),
   },
   destroyer: {
     positions: [
@@ -85,11 +91,19 @@ const shipLayout: Ships = {
       [1, 0],
     ],
     img: DestroyerImg,
-    hits: [false, false],
-    get size(): number {
-      return this.positions.length;
-    },
+    size: 2,
+    hits: Array(2).fill(false),
   },
+};
+
+const userDetail: PlayerDetail = {
+  name: "Player 1",
+  score: 0,
+};
+
+const opponentDetail: PlayerDetail = {
+  name: "Player 2",
+  score: 0,
 };
 
 export const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -97,28 +111,53 @@ export const GameContext = createContext<GameContextType | undefined>(undefined)
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [board, setBoard] = useState<string[][]>(initialBoard);
   const [ships, setShips] = useState<Ships>(shipLayout);
+  const [user, setUser] = useState<PlayerDetail>(userDetail);
+  const [totalHitArea, setTotalHitArea] = useState(() =>
+    Object.values(shipLayout).reduce((acc, ship) => acc + ship.size, 0)
+  );
 
-  const handleClick = (row: number, col: number) => {
-    const newBoard = [...board];
-    const newShipLayout = { ...ships };
-    let hit = false;
+  const handleClick = useCallback(
+    (row: number, col: number) => {
+      setBoard((prevBoard) => {
+        const newBoard = [...prevBoard];
+        let hit = false;
 
-    Object.keys(ships).forEach((ship) => {
-      ships[ship].positions.forEach((pos, index) => {
-        if (pos[0] === row && pos[1] === col) {
-          newShipLayout[ship].hits[index] = true;
-          hit = true;
+        setShips((prevShips) => {
+          const newShipLayout = { ...prevShips };
+
+          Object.keys(prevShips).forEach((ship) => {
+            prevShips[ship].positions.forEach((pos, index) => {
+              if (pos[0] === row && pos[1] === col) {
+                newShipLayout[ship].hits[index] = true;
+                newShipLayout[ship].size -= 1;
+                hit = true;
+              }
+            });
+          });
+
+          return newShipLayout;
+        });
+
+        if (hit) {
+          setTotalHitArea((prevTotal) => prevTotal - 1);
+          if (totalHitArea === 1) {
+            setUser((prevUser) => ({ ...prevUser, score: prevUser.score + 1 }));
+          }
         }
-      });
-    });
 
-    newBoard[row][col] = hit ? "hit" : "miss";
-    setBoard(newBoard);
-    setShips(newShipLayout);
-  };
+        newBoard[row][col] = hit ? "hit" : "miss";
+        return newBoard;
+      });
+    },
+    [totalHitArea]
+  );
+
+  const isWon = totalHitArea === 0;
 
   return (
-    <GameContext.Provider value={{ board, handleClick, ships }}>
+    <GameContext.Provider
+      value={{ board, handleClick, ships, user, opponent: opponentDetail, isWon }}
+    >
       {children}
     </GameContext.Provider>
   );
