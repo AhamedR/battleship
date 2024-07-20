@@ -28,7 +28,6 @@ const Cell: React.FC<CellProps> = ({ value, onClick }) => {
       <Button
         onClick={onClick}
         aria-label={`cell ${value}`}
-        disabled={!!value}
         sx={{ padding: "0", width: "100%", minWidth: "auto", height: "auto" }}
       >
         <img
