@@ -29,7 +29,7 @@ interface PlayerDetail {
 
 export interface GameContextType {
   board: string[][];
-  handleClick: (row: number, col: number) => void;
+  handleBoardClick: (row: number, col: number) => void;
   ships: Ships;
   user: PlayerDetail;
   opponent: PlayerDetail;
@@ -41,7 +41,7 @@ const initialBoard: string[][] = Array(10)
   .fill(null)
   .map(() => Array(10).fill(""));
 
-const shipLayout: Ships = {
+const initialShips: Ships = {
   carrier: {
     positions: [
       [2, 9],
@@ -96,12 +96,12 @@ const shipLayout: Ships = {
   },
 };
 
-const userDetail: PlayerDetail = {
+const initialUser: PlayerDetail = {
   name: "Player 1",
   score: 0,
 };
 
-const opponentDetail: PlayerDetail = {
+const initialOpponent: PlayerDetail = {
   name: "Player 2",
   score: 0,
 };
@@ -110,14 +110,19 @@ export const GameContext = createContext<GameContextType | undefined>(undefined)
 
 export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [board, setBoard] = useState<string[][]>(initialBoard);
-  const [ships, setShips] = useState<Ships>(shipLayout);
-  const [user, setUser] = useState<PlayerDetail>(userDetail);
-  const [totalHitArea, setTotalHitArea] = useState(() =>
-    Object.values(shipLayout).reduce((acc, ship) => acc + ship.size, 0)
+  const [ships, setShips] = useState<Ships>(initialShips);
+  const [user, setUser] = useState<PlayerDetail>(initialUser);
+  const [totalShipCells, setTotalShipCells] = useState(() =>
+    Object.values(initialShips).reduce((acc, ship) => acc + ship.size, 0)
   );
 
-  const handleClick = useCallback(
+  const handleBoardClick = useCallback(
     (row: number, col: number) => {
+      // Early return if the cell is already clicked
+      if (board[row][col] === "hit" || board[row][col] === "miss") {
+        return;
+      }
+
       setBoard((prevBoard) => {
         const newBoard = [...prevBoard];
         let hit = false;
@@ -139,8 +144,8 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
 
         if (hit) {
-          setTotalHitArea((prevTotal) => prevTotal - 1);
-          if (totalHitArea === 1) {
+          setTotalShipCells((prevTotal) => prevTotal - 1);
+          if (totalShipCells === 1) {
             setUser((prevUser) => ({ ...prevUser, score: prevUser.score + 1 }));
           }
         }
@@ -149,15 +154,13 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         return newBoard;
       });
     },
-    [totalHitArea]
+    [board, totalShipCells]
   );
 
-  const isWon = totalHitArea === 0;
+  const isWon = totalShipCells === 0;
 
   return (
-    <GameContext.Provider
-      value={{ board, handleClick, ships, user, opponent: opponentDetail, isWon }}
-    >
+    <GameContext.Provider value={{ board, handleBoardClick, ships, user, opponent: initialOpponent, isWon }}>
       {children}
     </GameContext.Provider>
   );
