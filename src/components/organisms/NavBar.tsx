@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
   return (
     <AppBar position="static" sx={{ backgroundColor: "#9595fb " }}>
       <Toolbar>
-        <Grid container direction={{ xs: "column", sm: "row" }} alignItems="center">
+        <Grid container direction={{ xs: "column", sm: "row" }} pt={{ xs: 2, sm: 0 }} pb={{ xs: 1, sm: 0 }} alignItems="center">
           <Grid item xs={12} sm={4}>
             <Typography variant="h6">Battleship Game</Typography>
           </Grid>

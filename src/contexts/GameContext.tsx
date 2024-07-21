@@ -173,7 +173,6 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const restartGame = () => {
     setBoard([...initialBoard.map((row) => [...row])]);
     setShips(JSON.parse(JSON.stringify(initialShips)));
-    setUser({ ...initialUser });
     setTotalShipCells(calculateTotalShipCells(initialShips));
   };
 
