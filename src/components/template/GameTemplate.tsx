@@ -3,10 +3,12 @@ import Grid from "@mui/material/Grid";
 
 import GameInfo from "../organisms/GameInfo";
 import Board from "../organisms/Board";
+import WinNotification from "../molecules/WinNotification";
 
 const GameTemplate: React.FC = () => {
   return (
     <Container maxWidth="md">
+      <WinNotification />
       <Grid
         container
         sx={{ flexDirection: { md: "row", xs: "column-reverse" } }}
