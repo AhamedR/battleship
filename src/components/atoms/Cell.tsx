@@ -6,11 +6,12 @@ import PlaceholderImg from "../../assets/placeholder.png";
 import MissImg from "../../assets/miss.png";
 
 interface CellProps {
+  isActive: boolean;
   value: string;
   onClick: () => void;
 }
 
-const Cell: React.FC<CellProps> = ({ value, onClick }) => {
+const Cell: React.FC<CellProps> = ({ value, onClick, isActive = false }) => {
   const markerImg =
     value === "hit" ? HitImg : value === "miss" ? MissImg : PlaceholderImg;
 
@@ -22,12 +23,12 @@ const Cell: React.FC<CellProps> = ({ value, onClick }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        gap: "1px",
       }}
     >
       <Button
         onClick={onClick}
         aria-label={`cell ${value}`}
+        disabled={!isActive}
         sx={{ padding: "0", width: "100%", minWidth: "auto", height: "auto" }}
       >
         <img

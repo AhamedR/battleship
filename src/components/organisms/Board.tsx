@@ -4,7 +4,7 @@ import Cell from "../atoms/Cell";
 import useGameLogic from "../../hooks/useGameLogic";
 
 const Board: React.FC = () => {
-  const { board, handleBoardClick } = useGameLogic();
+  const { isWon, board, handleBoardClick } = useGameLogic();
   return (
     <Grid container>
       <Grid
@@ -18,6 +18,7 @@ const Board: React.FC = () => {
           row.map((cell, colIndex) => (
             <Cell
               key={`${rowIndex}-${colIndex}`}
+              isActive={!isWon}
               value={cell}
               onClick={() => handleBoardClick(rowIndex, colIndex)}
             />
