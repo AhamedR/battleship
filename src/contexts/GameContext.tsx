@@ -119,16 +119,16 @@ const initialOpponent: PlayerDetail = {
 const calculateTotalShipCells = (ships: Ships): number =>
   Object.values(ships).reduce((acc, ship) => acc + ship.size, 0);
 
-export const GameContext = createContext<GameContextType | undefined>(undefined);
+const GameContext = createContext<GameContextType | undefined>(undefined);
 
-export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [board, setBoard] = useState<string[][]>([
     ...initialBoard.map((row) => [...row]),
   ]);
   const [ships, setShips] = useState<Ships>(
     JSON.parse(JSON.stringify(initialShips))
   );
-  const [user, setUser] = useState<PlayerDetail>({ ...initialUser });
+  const [user, setUser] = useState<PlayerDetail>(initialUser);
   const [showHitLocations, setShowHitLocations] = useState(false);
   const [totalShipCells, setTotalShipCells] = useState(() =>
     calculateTotalShipCells(initialShips)
@@ -137,51 +137,54 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   useEffect(() => {
     // Simulate loading delay
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       setIsLoading(false);
     }, 500);
+
+    return () => clearTimeout(timeout);
   }, []);
 
   const handleBoardClick = useCallback(
     (row: number, col: number) => {
-      // Early return if the cell is already clicked
-      if (board[row][col] === "hit" || board[row][col] === "miss") {
-        return;
-      }
+      if (board[row][col] === "hit" || board[row][col] === "miss") return;
 
-      setBoard((prevBoard) => {
-        const newBoard = [...prevBoard];
-        let hit = false;
-
-        setShips((prevShips) => {
-          const newShipLayout = { ...prevShips };
-
-          Object.keys(prevShips).forEach((ship) => {
-            prevShips[ship].positions.forEach((pos, index) => {
-              if (pos[0] === row && pos[1] === col) {
-                newShipLayout[ship].hits[index] = true;
-                newShipLayout[ship].size -= 1;
-                hit = true;
-              }
-            });
-          });
-
-          return newShipLayout;
-        });
-
-        if (hit) {
-          setTotalShipCells((prevTotal) => prevTotal - 1);
-          if (totalShipCells === 1) {
-            setUser((prevUser) => ({ ...prevUser, score: prevUser.score + 1 }));
-          }
-        }
-
-        newBoard[row][col] = hit ? "hit" : "miss";
-        return newBoard;
-      });
+      updateBoardAndShips(row, col);
     },
     [board, totalShipCells]
   );
+
+  const updateBoardAndShips = (row: number, col: number) => {
+    setBoard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      let hit = false;
+
+      setShips((prevShips) => {
+        const newShipLayout = { ...prevShips };
+
+        Object.keys(prevShips).forEach((ship) => {
+          prevShips[ship].positions.forEach((pos, index) => {
+            if (pos[0] === row && pos[1] === col) {
+              newShipLayout[ship].hits[index] = true;
+              newShipLayout[ship].size -= 1;
+              hit = true;
+            }
+          });
+        });
+
+        return newShipLayout;
+      });
+
+      if (hit) {
+        setTotalShipCells((prevTotal) => prevTotal - 1);
+        if (totalShipCells === 1) {
+          setUser((prevUser) => ({ ...prevUser, score: prevUser.score + 1 }));
+        }
+      }
+
+      newBoard[row][col] = hit ? "hit" : "miss";
+      return newBoard;
+    });
+  };
 
   const toggleHitLocations = () => setShowHitLocations((prev) => !prev);
 
@@ -212,3 +215,5 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     </GameContext.Provider>
   );
 };
+
+export { GameContext, GameProvider };
