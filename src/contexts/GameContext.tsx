@@ -1,4 +1,10 @@
-import React, { createContext, useState, ReactNode, useCallback } from "react";
+import React, {
+  createContext,
+  useState,
+  ReactNode,
+  useCallback,
+  useEffect,
+} from "react";
 
 // Assets
 import CarrierImg from "../assets/carrier.png";
@@ -37,6 +43,7 @@ export interface GameContextType {
   showHitLocations: boolean;
   toggleHitLocations: () => void;
   restartGame: () => void;
+  isLoading: boolean;
 }
 
 // Initial Values
@@ -126,6 +133,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [totalShipCells, setTotalShipCells] = useState(() =>
     calculateTotalShipCells(initialShips)
   );
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    // Simulate loading delay
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  }, []);
 
   const handleBoardClick = useCallback(
     (row: number, col: number) => {
@@ -190,6 +205,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         showHitLocations,
         toggleHitLocations,
         restartGame,
+        isLoading,
       }}
     >
       {children}

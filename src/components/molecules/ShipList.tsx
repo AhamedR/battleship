@@ -4,7 +4,6 @@ import Grid from '@mui/material/Grid';
 import Ship from '../atoms/Ship';
 import useGameLogic from '../../hooks/useGameLogic';
 
-
 const ShipList: React.FC = () => {
   const {ships} = useGameLogic()
   const shipData = useMemo(() => ships, [ships]);
