@@ -17,13 +17,11 @@ const Cell: React.FC<CellProps> = ({ value, onClick, isActive = false }) => {
 
   return (
     <Box
-      sx={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      width="100%"
+      height="100%"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
     >
       <Button
         onClick={onClick}
