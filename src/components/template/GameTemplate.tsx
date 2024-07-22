@@ -14,6 +14,7 @@ const GameTemplate: React.FC = () => {
         sx={{ flexDirection: { md: "row", xs: "column-reverse" } }}
         spacing={{ xs: 0, md: 1 }}
         pt={4}
+        pb={4}
       >
         <Grid item xs={12} md={5} pt={{ xs: 0, sm: 2 }}>
           <GameInfo />

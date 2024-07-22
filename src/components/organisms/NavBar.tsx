@@ -1,4 +1,3 @@
-import React from "react";
 import Grid from "@mui/material/Grid";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -14,9 +13,15 @@ const Navbar: React.FC = () => {
   const { showHitLocations, toggleHitLocations, restartGame } = useGameLogic();
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#9595fb " }}>
+    <AppBar position="static" sx={{ backgroundColor: "#9595fb" }}>
       <Toolbar>
-        <Grid container direction={{ xs: "column", sm: "row" }} pt={{ xs: 2, sm: 0 }} pb={{ xs: 1, sm: 0 }} alignItems="center">
+        <Grid
+          container
+          direction={{ xs: "column", sm: "row" }}
+          pt={{ xs: 2, sm: 0 }}
+          pb={{ xs: 1, sm: 0 }}
+          alignItems="center"
+        >
           <Grid item xs={12} sm={4}>
             <Typography variant="h6">Battleship Game</Typography>
           </Grid>
